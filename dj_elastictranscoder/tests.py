@@ -3,7 +3,7 @@ import json
 
 from django.test import TestCase
 from django.dispatch import receiver
-from django.db import models
+from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType
 
 from .models import EncodeJob
@@ -14,17 +14,14 @@ from .signals import (
 )
 
 
-
 PROJECT_ROOT = os.path.dirname(os.path.realpath(__file__))
 FIXTURE_DIRS = os.path.join(PROJECT_ROOT, 'fixtures')
 
 
-class Item(models.Model):
-    name = models.CharField(max_length=100)
-
 # ======================
 # define signal receiver
 # ======================
+
 
 @receiver(transcode_onprogress)
 def encode_onprogress(sender, message, **kwargs):
@@ -54,8 +51,8 @@ class SNSNotificationTest(TestCase):
     urls = 'dj_elastictranscoder.urls'
 
     def setUp(self):
-        item = Item.objects.create(name='Hello')
-        content_type = ContentType.objects.get_for_model(Item)
+        item = User.objects.create(username='Hello')
+        content_type = ContentType.objects.get_for_model(User)
         self.job_id = '1396802241671-jkmme8'
 
         self.job = EncodeJob.objects.create(id=self.job_id, content_type=content_type, object_id=item.id)
@@ -105,9 +102,8 @@ class SignalTest(TestCase):
         """
 
         # assume an encode job was submitted
-        item = Item.objects.create(name='Hello')
-
-        ctype = ContentType.objects.get_for_model(item)
+        item = User.objects.create(username='Hello')
+        ctype = ContentType.objects.get_for_model(User)
 
         job = EncodeJob()
         job.id = '1396802241671-jkmme8'
@@ -139,9 +135,8 @@ class SignalTest(TestCase):
         """
 
         # assume an encode job was submitted
-        item = Item.objects.create(name='Hello')
-
-        ctype = ContentType.objects.get_for_model(item)
+        item = User.objects.create(username='Hello')
+        ctype = ContentType.objects.get_for_model(User)
 
         job = EncodeJob()
         job.id = '1396802241671-jkmme8'
@@ -173,9 +168,8 @@ class SignalTest(TestCase):
         """
 
         # assume an encode job was submitted
-        item = Item.objects.create(name='Hello')
-
-        ctype = ContentType.objects.get_for_model(item)
+        item = User.objects.create(username='Hello')
+        ctype = ContentType.objects.get_for_model(User)
 
         job = EncodeJob()
         job.id = '1396802241671-jkmme8'
