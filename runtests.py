@@ -3,11 +3,12 @@
 import sys
 from os.path import dirname, abspath
 
+import django
 from django.conf import settings
 
 
 settings.configure(
-    DATABASES = {
+    DATABASES={
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
             'NAME': ':memory:'
@@ -26,6 +27,9 @@ settings.configure(
     ROOT_URLCONF='',
 )
 
+
+if django.VERSION >= (1, 7):
+    django.setup()
 
 
 def runtests(**test_args):
