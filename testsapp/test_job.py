@@ -3,15 +3,18 @@ import json
 
 from django.test import TestCase
 from django.dispatch import receiver
-from django.contrib.auth.models import User
+from django.db import models
 from django.contrib.contenttypes.models import ContentType
 
-from .models import EncodeJob
-from .signals import (
+from dj_elastictranscoder.models import EncodeJob
+from dj_elastictranscoder.signals import (
     transcode_onprogress, 
     transcode_onerror, 
     transcode_oncomplete
 )
+
+from .models import Item
+
 
 
 PROJECT_ROOT = os.path.dirname(os.path.realpath(__file__))
@@ -21,7 +24,6 @@ FIXTURE_DIRS = os.path.join(PROJECT_ROOT, 'fixtures')
 # ======================
 # define signal receiver
 # ======================
-
 
 @receiver(transcode_onprogress)
 def encode_onprogress(sender, message, **kwargs):
@@ -51,8 +53,8 @@ class SNSNotificationTest(TestCase):
     urls = 'dj_elastictranscoder.urls'
 
     def setUp(self):
-        item = User.objects.create(username='Hello')
-        content_type = ContentType.objects.get_for_model(User)
+        item = Item.objects.create(name='Hello')
+        content_type = ContentType.objects.get_for_model(Item)
         self.job_id = '1396802241671-jkmme8'
 
         self.job = EncodeJob.objects.create(id=self.job_id, content_type=content_type, object_id=item.id)
@@ -67,7 +69,8 @@ class SNSNotificationTest(TestCase):
             content = f.read()
 
         resp = self.client.post('/endpoint/', content, content_type="application/json")
-        self.assertContains(resp, 'Done', status_code=200)
+        self.assertEqual(resp.status_code, 200)
+        self.assertContains(resp, 'Done')
 
         job = EncodeJob.objects.get(id=self.job_id)
         self.assertEqual(job.state, 1)
@@ -77,7 +80,8 @@ class SNSNotificationTest(TestCase):
             content = f.read()
 
         resp = self.client.post('/endpoint/', content, content_type="application/json")
-        self.assertContains(resp, 'Done', status_code=200)
+        self.assertEqual(resp.status_code, 200)
+        self.assertContains(resp, 'Done')
 
         job = EncodeJob.objects.get(id=self.job_id)
         self.assertEqual(job.state, 2)
@@ -88,7 +92,8 @@ class SNSNotificationTest(TestCase):
             content = f.read()
 
         resp = self.client.post('/endpoint/', content, content_type="application/json")
-        self.assertContains(resp, 'Done', status_code=200)
+        self.assertEqual(resp.status_code, 200)
+        self.assertContains(resp, 'Done')
 
         job = EncodeJob.objects.get(id=self.job_id)
         self.assertEqual(job.state, 4)
@@ -102,8 +107,9 @@ class SignalTest(TestCase):
         """
 
         # assume an encode job was submitted
-        item = User.objects.create(username='Hello')
-        ctype = ContentType.objects.get_for_model(User)
+        item = Item.objects.create(name='Hello')
+
+        ctype = ContentType.objects.get_for_model(item)
 
         job = EncodeJob()
         job.id = '1396802241671-jkmme8'
@@ -135,8 +141,9 @@ class SignalTest(TestCase):
         """
 
         # assume an encode job was submitted
-        item = User.objects.create(username='Hello')
-        ctype = ContentType.objects.get_for_model(User)
+        item = Item.objects.create(name='Hello')
+
+        ctype = ContentType.objects.get_for_model(item)
 
         job = EncodeJob()
         job.id = '1396802241671-jkmme8'
@@ -168,8 +175,9 @@ class SignalTest(TestCase):
         """
 
         # assume an encode job was submitted
-        item = User.objects.create(username='Hello')
-        ctype = ContentType.objects.get_for_model(User)
+        item = Item.objects.create(name='Hello')
+
+        ctype = ContentType.objects.get_for_model(item)
 
         job = EncodeJob()
         job.id = '1396802241671-jkmme8'
