@@ -15,8 +15,8 @@ setup(
     include_package_data=True,
     zip_safe=False,
     install_requires=[
-        "django >= 1.4, < 1.9",
-        "boto3 >= 1.1",
+        "Django>=1.4,<1.9",
+        "boto3>=1.1",
     ],
     classifiers=[
         "Intended Audience :: Developers",
