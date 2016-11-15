@@ -3,7 +3,7 @@ from dj_elastictranscoder import __version__
 
 
 setup(
-    name='django-elastic-transcoder',
+    name='django-elastic-transcoder-socialschools',
     version=__version__,
     description="Django with AWS elastic transcoder",
     long_description=open("README.rst").read(),
