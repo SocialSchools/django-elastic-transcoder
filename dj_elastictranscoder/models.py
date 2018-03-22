@@ -1,10 +1,7 @@
 from django.db import models
 from django.contrib.contenttypes.models import ContentType
 import django
-if django.VERSION > (1, 8, 19, 'final', 0):
-    from django.contrib.contenttypes.fields import GenericForeignKey
-else:
-    from django.contrib.contenttypes.generic import GenericForeignKey
+from django.contrib.contenttypes.fields import GenericForeignKey
 
 
 class EncodeJob(models.Model):
